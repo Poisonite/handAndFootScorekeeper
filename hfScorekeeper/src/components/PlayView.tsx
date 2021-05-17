@@ -14,10 +14,10 @@ import {
 import React, { useState } from "react";
 import { GameProps } from "../models/props";
 
-const PlayView = () => {
-  // Store Game Info
-  let gameProps = new GameProps();
+// Store Game Info
+let gameProps = new GameProps();
 
+const PlayView = () => {
   // Ionic Alerts
   const [present] = useIonAlert();
 
@@ -48,7 +48,9 @@ const PlayView = () => {
           members: [],
           id: i + 1,
         });
+        // console.log(`pushed data`);
       }
+      // console.log(gameProps);
       setPlayState("buildTeams"); // Move to the next step
       return;
     }
@@ -108,27 +110,24 @@ const PlayView = () => {
             <IonCardTitle></IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
+            {console.log("Team Props", gameProps.teams)}
             <form onSubmit={populateTeams}>
               {gameProps.teams.map((team, i) => (
-                <div key={team.id}>
-                  {/* <IonItem>
-                    <IonLabel position="floating">
-                      Enter a Team Name {team.opener}
-                    </IonLabel>
-                    <IonInput
-                      required
-                      type="text"
-                      name="teamName"
-                      id="teamName"
-                      value={team.name}
-                      onIonChange={(e) => updateTeamName(i, e)}
-                    ></IonInput>
-                  </IonItem> */}
-                  {team.opener}
-                  {i}
-                </div>
+                <IonItem key={team.id}>
+                  <IonLabel position="floating">
+                    Enter Team {team.id}'s Name
+                  </IonLabel>
+                  <IonInput
+                    required
+                    type="text"
+                    name={`teamName-${team.id}`}
+                    id={`teamName-${team.id}`}
+                    value={team.name}
+                    onIonChange={(e) => updateTeamName(i, e)}
+                  ></IonInput>
+                </IonItem>
               ))}
-              <IonButton type="submit">eee</IonButton>
+              <IonButton type="submit">Continue</IonButton>
             </form>
           </IonCardContent>
         </IonCard>
