@@ -1,22 +1,38 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonText,
+} from "@ionic/react";
+import PlayView from "../components/PlayView";
+import "./Home.css";
 
 const Home: React.FC = () => {
   return (
-    <IonPage>
+    <IonPage className="home">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Blank</IonTitle>
+          <IonTitle>Welcome to the Hand and Foot Scorekeeper!</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
+        <IonGrid justify-content-center>
+          <IonRow>
+            <IonCol size="12">
+              <IonText>
+                <h1>Ready to Play Hand and Foot?</h1>
+              </IonText>
+            </IonCol>
+            <IonCol size="12">
+              <PlayView />
+            </IonCol>
+          </IonRow>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );
