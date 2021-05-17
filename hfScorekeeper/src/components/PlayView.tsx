@@ -14,8 +14,7 @@ import {
 import React, { useState } from "react";
 import { GameProps } from "../models/props";
 
-// Store Game Info
-let gameProps = new GameProps();
+const game: GameProps = JSON.parse(localStorage.getItem("gameProps") || "{}");
 
 const PlayView = () => {
   // Ionic Alerts
@@ -36,6 +35,9 @@ const PlayView = () => {
   const createTeams = (event: React.FormEvent) => {
     event.preventDefault(); // Stop page from refreshing etc
 
+    // Store Game Info
+    let gameProps = new GameProps();
+
     // Build out default template for the teams to be injected in next step
     if (players && players >= 2 && players % 2 === 0) {
       gameProps.playerCount = players;
@@ -48,9 +50,10 @@ const PlayView = () => {
           members: [],
           id: i + 1,
         });
-        // console.log(`pushed data`);
       }
-      // console.log(gameProps);
+      localStorage.setItem("gameProps", "{}");
+      localStorage.setItem("gameProps", JSON.stringify(gameProps));
+      // console.log(game);
       setPlayState("buildTeams"); // Move to the next step
       return;
     }
@@ -110,9 +113,9 @@ const PlayView = () => {
             <IonCardTitle></IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-            {console.log("Team Props", gameProps.teams)}
+            {console.log("Team Props", game.teams)}
             <form onSubmit={populateTeams}>
-              {gameProps.teams.map((team, i) => (
+              {game.teams.map((team, i) => (
                 <IonItem key={team.id}>
                   <IonLabel position="floating">
                     Enter Team {team.id}'s Name
