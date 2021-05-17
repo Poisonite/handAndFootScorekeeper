@@ -7,6 +7,7 @@ export class GameProps {
 class TeamProps {
   public name!: string;
   public score!: number;
-  public opener: number = 50;
+  public opener!: number;
   public members!: Array<string>;
+  public id!: number;
 }

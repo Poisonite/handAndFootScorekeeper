@@ -41,7 +41,13 @@ const PlayView = () => {
       gameProps.playerCount = players;
       gameProps.teamCount = players / 2;
       for (let i = 0; i < gameProps.teamCount; i++) {
-        gameProps.teams.push({ name: "", score: 0, opener: 50, members: [] });
+        gameProps.teams.push({
+          name: "",
+          score: 0,
+          opener: 50,
+          members: [],
+          id: i + 1,
+        });
       }
       setPlayState("buildTeams"); // Move to the next step
       return;
@@ -86,6 +92,13 @@ const PlayView = () => {
     );
   }
 
+  const updateTeamName = (index: number, event: CustomEvent) => {
+    console.log("index", index);
+    console.log("event", event);
+  };
+
+  const populateTeams = (event: React.FormEvent) => {};
+
   if (playState === "buildTeams") {
     return (
       <div className="playView buildTeams">
@@ -95,21 +108,27 @@ const PlayView = () => {
             <IonCardTitle></IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-            <form onSubmit={createTeams}>
-              <IonItem>
-                <IonLabel position="floating">Total Number of Players</IonLabel>
-
-                <IonInput
-                  required
-                  type="number"
-                  min="2"
-                  name="players"
-                  id="players"
-                  value={players}
-                  onIonChange={playersChange}
-                ></IonInput>
-              </IonItem>
-              <IonButton type="submit">Confirm</IonButton>
+            <form onSubmit={populateTeams}>
+              {gameProps.teams.map((team, i) => (
+                <div key={team.id}>
+                  {/* <IonItem>
+                    <IonLabel position="floating">
+                      Enter a Team Name {team.opener}
+                    </IonLabel>
+                    <IonInput
+                      required
+                      type="text"
+                      name="teamName"
+                      id="teamName"
+                      value={team.name}
+                      onIonChange={(e) => updateTeamName(i, e)}
+                    ></IonInput>
+                  </IonItem> */}
+                  {team.opener}
+                  {i}
+                </div>
+              ))}
+              <IonButton type="submit">eee</IonButton>
             </form>
           </IonCardContent>
         </IonCard>
