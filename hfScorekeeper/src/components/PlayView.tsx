@@ -8,12 +8,12 @@ import {
   IonItem,
   IonLabel,
   IonInput,
-  IonText,
   useIonAlert,
 } from "@ionic/react";
 import React, { useState } from "react";
 import { GameProps } from "../models/props";
 
+// Retreve the game info from local Storage
 const game: GameProps = JSON.parse(localStorage.getItem("gameProps") || "{}");
 
 const PlayView = () => {
@@ -25,6 +25,7 @@ const PlayView = () => {
 
   // Stateful Forms - state creation
   let [players, setPlayers] = useState<number>();
+  let [teamNames, setTeamNames] = useState<any>({});
 
   // Stateful Forms - state updates
   const playersChange = (event: any) => {
@@ -53,7 +54,7 @@ const PlayView = () => {
       }
       localStorage.setItem("gameProps", "{}");
       localStorage.setItem("gameProps", JSON.stringify(gameProps));
-      // console.log(game);
+
       setPlayState("buildTeams"); // Move to the next step
       return;
     }
@@ -89,7 +90,14 @@ const PlayView = () => {
                 ></IonInput>
               </IonItem>
 
-              <IonButton type="submit">Confirm</IonButton>
+              <IonButton
+                fill="outline"
+                shape="round"
+                color="secondary"
+                type="submit"
+              >
+                Confirm
+              </IonButton>
             </form>
           </IonCardContent>
         </IonCard>
@@ -97,12 +105,48 @@ const PlayView = () => {
     );
   }
 
-  const updateTeamName = (index: number, event: CustomEvent) => {
-    console.log("index", index);
-    console.log("event", event);
+  const updateTeamName = (index: number, event: any) => {
+    // Create temp storage var to join new and existing data
+    let newTeamNames: any = teamNames;
+    newTeamNames[index] = event.target.value;
+
+    // Output unified data back to the stateful var
+    setTeamNames(newTeamNames);
   };
 
-  const populateTeams = (event: React.FormEvent) => {};
+  const populateTeams = (event: React.FormEvent) => {
+    event.preventDefault(); // Stop page from refreshing etc
+
+    let updatedGame: GameProps = game;
+    // Find number of team names which have been entered
+    const teamNameCount = Object.keys(teamNames).length;
+
+    if (teamNameCount === updatedGame.teams.length) {
+      for (const key in teamNames) {
+        // Convert the string key provided to a number so
+        //  it can be used to call the array index
+        const numKey: number = parseInt(key, 10);
+
+        // Pass each collected key into the updated game
+        //  object which contains the other game data
+        updatedGame.teams[numKey].name = teamNames[numKey];
+      }
+
+      // Store the updated game in local storage
+      localStorage.setItem("gameProps", JSON.stringify(updatedGame));
+
+      setPlayState("buildMembers"); // Move to the next step
+      console.log(game);
+      return;
+    }
+    // Show alert if the data is bad
+    present({
+      header: `Not all Names Given`,
+      message: `Please Fill out all fields!`,
+      buttons: ["Try Again"],
+    });
+    return;
+  };
 
   if (playState === "buildTeams") {
     return (
@@ -113,7 +157,6 @@ const PlayView = () => {
             <IonCardTitle></IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-            {console.log("Team Props", game.teams)}
             <form onSubmit={populateTeams}>
               {game.teams.map((team, i) => (
                 <IonItem key={team.id}>
@@ -130,7 +173,14 @@ const PlayView = () => {
                   ></IonInput>
                 </IonItem>
               ))}
-              <IonButton type="submit">Continue</IonButton>
+              <IonButton
+                fill="outline"
+                shape="round"
+                color="secondary"
+                type="submit"
+              >
+                Continue
+              </IonButton>
             </form>
           </IonCardContent>
         </IonCard>
